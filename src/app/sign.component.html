@@ -1,0 +1,27 @@
+<!-- Article main content -->
+<div class="col-xs-12 maincontent">
+    <header class="page-header">
+    </header>
+
+    <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+        <ul class="nav nav-tabs nav-justified">
+            <li role="presentation" [ngClass]="{active: display_mode === 'signin'}"><a routerLink="/signin">Вход</a></li>
+            <li role="presentation" [ngClass]="{active: display_mode === 'signup'}"><a routerLink="/signup">Регистрация</a></li>
+        </ul>
+        <div class="panel panel-default md-no-top-border">
+            <div class="panel-body">
+                <div class="alert alert-danger animated fadeIn" role="alert" *ngIf="error_message">
+                    <button type="button" class="close" aria-label="Закрыть" (click)="error_message = null"><span aria-hidden="true">&times;</span></button>
+                    {{ error_message }}
+                </div>
+                <my-signinform *ngIf="display_mode === 'signin'"></my-signinform>
+                <my-signupform *ngIf="display_mode === 'signup'"></my-signupform>
+                <my-resetpasswordrequestform *ngIf="display_mode === 'resetpasswordrequest'"></my-resetpasswordrequestform>
+                <my-resetpasswordverificationform *ngIf="['resetpasswordverification','resetpasswordverification/:token'].indexOf(display_mode) > -1"></my-resetpasswordverificationform>
+                <my-activationform *ngIf="['activation','activation/:token'].indexOf(display_mode) > -1"></my-activationform>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- /Article -->

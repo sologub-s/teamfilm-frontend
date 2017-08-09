@@ -1,0 +1,24 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="top-margin form-group animated fadeIn has-feedback" [ngClass]="{
+                    'has-error': validator().token_has_error,
+                    'has-success': validator().token_has_success
+                    }">
+        <label>Кодовая фраза из письма <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="token">
+        <span *ngIf="validator().token_error_required" class="help-block animated fadeInDown">Кодовая фраза не может быть пустой</span>
+        <span *ngIf="validator().token_show_remove || validator().token_show_ok" [ngClass]="{
+                            'glyphicon-remove':validator().token_show_remove,
+                            'glyphicon-ok':validator().token_show_ok
+                            }" class="glyphicon form-control-feedback animated fadeIn" aria-hidden="true"></span>
+    </div>
+
+    <hr>
+
+    <div class="row animated fadeIn">
+        <div class="col-lg-6">
+        </div>
+        <div class="col-lg-6 text-right">
+            <button id="activation_component_activationButton" autocomplete="off" data-loading-text="<i class='fa fa-spinner fa-spin fa-fw'></i>" class="btn btn-action" type="submit" [disabled]="!form.valid">Активировать</button>
+        </div>
+    </div>
+</form>

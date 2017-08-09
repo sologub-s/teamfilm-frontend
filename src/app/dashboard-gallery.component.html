@@ -1,0 +1,63 @@
+<my-dashboard-menu></my-dashboard-menu>
+
+<!-- Article main content -->
+<article class="col-md-10 maincontent padding-top-36" *ngIf="user">
+
+    <form>
+        <div class="row">
+            <div class="col-lg-6">
+                <div ng2FileDrop
+                     [ngClass]="{'nv-file-over': hasBaseDropZoneOver}"
+                     (fileOver)="fileOverBase($event)"
+                     [uploader]="uploader"
+                     class="well my-drop-zone hide-on-small">
+                    Перетяните файл сюда
+                </div>
+                <hr class="hide-on-small" />
+                <label>Выберите файлы <span class="text-danger">*</span></label>
+                <input type="file" class="form-control" ng2FileSelect [uploader]="uploader" multiple>
+                <div class="padding-top-20"></div>
+                <div class="progress" *ngIf="uploader.queue.length">
+                    <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': uploader.progress + '%' }"></div>
+                </div>
+                <!--<p>Queue length: {{ uploader?.queue?.length }}</p>-->
+                <p>У вас {{user.images.length}}{{uploader?.queue?.length > 0 ? ' + '+uploader?.queue?.length+' в очереди' : ''}} из {{configService.g().maxImages}} картинок</p>
+                <div *ngFor="let item of uploader.queue">
+                    <span>{{item.file.name}}</span>
+
+                    <div class="progress" style="margin-bottom: 0;">
+                        <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': item.progress + '%' }"></div>
+                    </div>
+
+                    <div>
+                        <span *ngIf="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                        <span *ngIf="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                        <span *ngIf="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <p>
+                    <button type="button" class="btn btn-primary btn-lg btn-block" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">Загрузить</button>
+                </p>
+            </div>
+            <div class="col-lg-6">
+                <p>
+                    <button type="button" class="btn btn-default btn-lg btn-block" (click)="cancelUploading()">Отмена</button>
+                </p>
+            </div>
+        </div>
+    </form>
+
+    <div class="row" *ngIf="user?.images?.length">
+        <ng-container *ngFor="let image of user?.images">
+            <div class="gallery_product col-lg-4 col-md-4 col-sm-4 col-xs-6 filter hdpe" attr.data-image-identity="{{image.identity}}">
+                <!--<img src="{{configService.g().storageUrl}}{{image.url}}" class="img-responsive">-->
+                <div class="img-responsive" [style.backgroundImage]="'url(' + configService.g().storageUrl+image.url + ')'"></div>
+                <i class="fa fa-times fa-3x" aria-hidden="true" (click)="removeImage(image.identity)"></i>
+            </div>
+        </ng-container>
+    </div>
+
+</article>

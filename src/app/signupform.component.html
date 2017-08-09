@@ -1,0 +1,104 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+    <div class="top-margin form-group animated fadeIn has-feedback" [ngClass]="{
+                    'has-error': validator().name_has_error,
+                    'has-success': validator().name_has_success
+                    }">
+        <label>Имя <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="name">
+        <span *ngIf="validator().name_error_required" class="help-block animated fadeInDown">Имя не может быть пустым</span>
+        <span *ngIf="validator().name_show_remove || validator().name_show_ok" [ngClass]="{
+                            'glyphicon-remove':validator().name_show_remove,
+                            'glyphicon-ok':validator().name_show_ok
+                            }" class="glyphicon form-control-feedback animated fadeIn" aria-hidden="true"></span>
+    </div>
+
+    <div class="top-margin form-group animated fadeIn has-feedback" [ngClass]="{
+                    'has-error': validator().surname_has_error,
+                    'has-success': validator().surname_has_success
+                    }">
+        <label>Фамилия <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="surname">
+        <span *ngIf="validator().surname_error_required" class="help-block animated fadeInDown">Фамилия не может быть пустой</span>
+        <span *ngIf="validator().surname_show_remove || validator().surname_show_ok" [ngClass]="{
+                            'glyphicon-remove':validator().surname_show_remove,
+                            'glyphicon-ok':validator().surname_show_ok
+                            }" class="glyphicon form-control-feedback animated fadeIn" aria-hidden="true"></span>
+    </div>
+
+    <div class="top-margin form-group animated fadeIn has-feedback" [ngClass]="{
+                    'has-error': validator().nickname_has_error,
+                    'has-success': validator().nickname_has_success
+                    }">
+        <label>Псевдоним <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="nickname">
+        <span *ngIf="validator().nickname_error_required" class="help-block animated fadeInDown">Псевдоним не может быть пустой</span>
+        <span *ngIf="validator().nickname_error_uniqueNickname" class="help-block animated fadeInDown">Такой псевдоним уже занят</span>
+        <span *ngIf="validator().nickname_show_remove || validator().nickname_show_ok || validator().nickname_loading" [ngClass]="{
+                            'glyphicon-remove':validator().nickname_show_remove,
+                            'glyphicon-ok':validator().nickname_show_ok,
+                            'glyphicon-refresh gly-spin':validator().nickname_loading
+                            }" class="glyphicon form-control-feedback animated fadeIn" aria-hidden="true"></span>
+    </div>
+
+    <div class="top-margin form-group animated fadeIn has-feedback" [ngClass]="{
+                    'has-error': validator().email_has_error,
+                    'has-success': validator().email_has_success
+                    }">
+        <label>Email <span class="text-danger">*</span></label>
+        <input type="email" class="form-control" formControlName="email">
+        <span *ngIf="validator().email_error_required" class="help-block animated fadeInDown">Email не может быть пустым</span>
+        <span *ngIf="validator().email_error_email" class="help-block animated fadeInDown">Введите действительный email</span>
+        <span *ngIf="validator().email_error_uniqueEmail" class="help-block animated fadeInDown">Такой email уже зарегистрирован</span>
+        <span *ngIf="validator().email_show_remove || validator().email_show_ok || validator().email_show_loading" [ngClass]="{
+                            'glyphicon-remove':validator().email_show_remove,
+                            'glyphicon-ok':validator().email_show_ok,
+                            'glyphicon-refresh gly-spin':validator().email_show_loading
+                            }" class="glyphicon form-control-feedback animated fadeIn" aria-hidden="true"></span>
+    </div>
+
+    <div class="row top-margin animated fadeIn">
+        <div class="col-sm-6" [ngClass]="{
+                    'has-error': validator().password_has_error,
+                    'has-success': validator().password_has_success
+                    }">
+            <label>Пароль <span class="text-danger">*</span></label>
+            <input type="password" class="form-control" formControlName="password">
+            <span *ngIf="validator().password_error_required" class="help-block animated fadeInDown">Пароль не может быть пустым</span>
+            <span *ngIf="validator().password_error_minlength" class="help-block animated fadeInDown">Минимальная длинна пароля - {{control_password.errors.minlength.requiredLength}}</span>
+            <span *ngIf="validator().password_error_passwordsAreEqual" class="help-block animated fadeInDown">Пароль и подтверждение пароля должны совпадать</span>
+            <span *ngIf="validator().password_show_remove || validator().password_show_ok" [ngClass]="{
+                            'glyphicon-remove':validator().password_show_remove,
+                            'glyphicon-ok':validator().password_show_remove
+                            }" class="glyphicon form-control-feedback animated fadeIn" aria-hidden="true"></span>
+        </div>
+        <div class="col-sm-6" [ngClass]="{
+                    'has-error': validator().confirmpassword_has_error,
+                    'has-success': validator().confirmpassword_has_success
+                    }">
+            <label>Пароль ещё раз <span class="text-danger">*</span></label>
+            <input type="password" class="form-control" formControlName="confirmpassword">
+            <span *ngIf="validator().confirmpassword_error_required" class="help-block animated fadeInDown">Подтверждение пароля не может быть пустым</span>
+            <span *ngIf="validator().confirmpassword_error_minlength" class="help-block animated fadeInDown">Минимальная длинна подтверждения пароля - {{control_confirmpassword.errors.minlength.requiredLength}}</span>
+            <span *ngIf="validator().confirmpassword_error_passwordsAreEqual" class="help-block animated fadeInDown">Пароль и подтверждение пароля должны совпадать</span>
+            <span *ngIf="validator().confirmpassword_show_remove || validator().confirmpassword_show_ok" [ngClass]="{
+                            'glyphicon-remove':validator().confirmpassword_show_remove,
+                            'glyphicon-ok':validator().confirmpassword_show_remove
+                            }" class="glyphicon form-control-feedback animated fadeIn" aria-hidden="true"></span>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row animated fadeIn">
+        <div class="col-lg-6">
+            <label class="checkbox">
+                <input type="checkbox" formControlName="agree">
+                Я согласен с <a href="/terms">Правилами</a>
+            </label>
+        </div>
+        <div class="col-lg-6 text-right">
+            <button id="sign_component_signupButton" autocomplete="off" data-loading-text="<i class='fa fa-spinner fa-spin fa-fw'></i>" class="btn btn-action" type="submit" [disabled]="!form.valid || !control_agree.value || validator().loading">Зарегистрироваться</button>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,48 @@
+<!-- Fixed navbar -->
+<div class="navbar navbar-inverse navbar-fixed-top headroom" >
+    <div class="container">
+        <div class="navbar-header">
+            <!-- Button for smallest screens -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+            <a class="navbar-brand" href="/"><img src="assets/images/logo2.png" alt="TeamFilm"></a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav pull-right" *ngIf="user">
+                <li class="dropdown animated fadeIn" routerLinkActive="active">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ user?.name }} {{ user?.surname }} <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li routerLinkActive="active"><a routerLink="/my/profile"><i class="fa fa-user" aria-hidden="true"></i> Личный кабинет</a></li>
+                        <li><a (click)="authService.logout()"><i class="fa fa-sign-out" aria-hidden="true"></i> Выход</a></li>
+                    </ul>
+                </li>
+                <li class="animated fadeIn">
+                    <img class="avatar img-circle" src="{{ smallAvatarUrl }}" />
+                </li>
+            </ul>
+            <ul class="nav navbar-nav pull-right">
+                <li routerLinkActive="active" class="animated fadeIn">
+                    <a routerLink="/projects">Проекты</a>
+                </li>
+                <li routerLinkActive="active" class="animated fadeIn">
+                    <a routerLink="/people">Люди</a>
+                </li>
+                <!--
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">More Pages <b class="caret"></b></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="sidebar-left.html">Left Sidebar</a></li>
+                    <li class="active"><a href="sidebar-right.html">Right Sidebar</a></li>
+                  </ul>
+                </li>
+                -->
+                <li routerLinkActive="active" class="animated fadeIn" *ngIf="!user">
+                    <a class="btn uppercase" routerLink="/signin">Вход / Регистрация</a>
+                    <span routerLink="/signup"></span>
+                </li>
+            </ul>
+
+        </div><!--/.nav-collapse -->
+    </div>
+    <!--<pre>{{smallAvatarUrl|json}}</pre>-->
+</div>
+<!-- /.navbar -->

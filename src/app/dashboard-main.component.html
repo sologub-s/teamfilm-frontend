@@ -1,0 +1,187 @@
+<my-dashboard-menu></my-dashboard-menu>
+
+<!-- Article main content -->
+<article class="col-md-10 maincontent">
+
+    <div class="panel panel-default" *ngIf="user">
+        <div class="panel-body">
+
+            <div class="alert alert-danger animated fadeIn" role="alert" *ngIf="error_message">
+                <button type="button" class="close" aria-label="Закрыть" (click)="error_message = null"><span aria-hidden="true">&times;</span></button>
+                {{ error_message }}
+            </div>
+
+            <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+                <div class="top-margin form-group animated fadeIn has-feedback">
+                    <label>Email </label>
+                    <input type="text" class="form-control" value="{{user?.email}}" disabled />
+                </div>
+
+                <div class="top-margin form-group animated fadeIn has-feedback">
+                    <label>Псевдоним </label>
+                    <input type="text" class="form-control" value="{{user?.nickname}}" disabled />
+                </div>
+
+                <div class="top-margin form-group animated fadeIn has-feedback" [ngClass]="{
+                                  'has-error': validator().name_has_error,
+                                  'has-success': validator().name_has_success
+                                  }">
+                    <label>Имя <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" formControlName="name">
+                    <span *ngIf="validator().name_error_required" class="help-block animated fadeInDown">Имя не может быть пустым</span>
+                    <span *ngIf="validator().name_show_remove || validator().name_show_ok" [ngClass]="{
+                                          'glyphicon-remove':validator().name_show_remove,
+                                          'glyphicon-ok':validator().name_show_ok
+                                          }" class="glyphicon form-control-feedback animated fadeIn" aria-hidden="true"></span>
+                </div>
+
+                <div class="top-margin form-group animated fadeIn has-feedback" [ngClass]="{
+                                  'has-error': validator().surname_has_error,
+                                  'has-success': validator().surname_has_success
+                                  }">
+                    <label>Фамилия <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" formControlName="surname">
+                    <span *ngIf="validator().surname_error_required" class="help-block animated fadeInDown">Фамилия не может быть пустой</span>
+                    <span *ngIf="validator().surname_show_remove || validator().surname_show_ok" [ngClass]="{
+                                          'glyphicon-remove':validator().surname_show_remove,
+                                          'glyphicon-ok':validator().surname_show_ok
+                                          }" class="glyphicon form-control-feedback animated fadeIn" aria-hidden="true"></span>
+                </div>
+
+                <div class="top-margin form-group animated fadeIn has-feedback">
+                    <label>Пол </label>
+                    <select formControlName="sex" class="form-control">
+                        <option value="null_value">Не указан</option>
+                        <option value="m">Мужской</option>
+                        <option value="w">Женский</option>
+                    </select>
+                </div>
+
+                <div class="top-margin form-group animated fadeIn has-feedback">
+                    <label>Дата рождения <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" name="birthday_visible" value="{{birthday_visible}}">
+                    <input type="hidden" class="form-control" formControlName="birthday">
+                </div>
+
+                <div class="top-margin form-group animated fadeIn has-feedback" [ngClass]="{
+                                  'has-error': validator().cellphone_has_error,
+                                  'has-success': validator().cellphone_has_success
+                                  }">
+                    <label>Телефон </label>
+                    <input type="text" class="form-control" formControlName="cellphone">
+                    <span *ngIf="validator().cellphone_error_cellphone" class="help-block animated fadeInDown">Телефон должен быть в формате +XXXXXXXXXXXX</span>
+                    <span *ngIf="validator().cellphone_show_remove || validator().cellphone_show_ok" [ngClass]="{
+                                          'glyphicon-remove':validator().cellphone_show_remove,
+                                          'glyphicon-ok':validator().cellphone_show_ok
+                                          }" class="glyphicon form-control-feedback animated fadeIn" aria-hidden="true"></span>
+                </div>
+
+                <div class="top-margin form-group animated fadeIn has-feedback">
+                    <label>Страна </label>
+                    <select formControlName="country" class="form-control">
+                        <option value="null_value">Не указана</option>
+                        <option *ngFor="let country of countries.value" value="{{country.code}}">{{country.name}}</option>
+                    </select>
+                </div>
+
+                <div class="top-margin form-group animated fadeIn has-feedback">
+                    <label>Город </label>
+                    <select formControlName="city" class="form-control">
+                        <option value="null_value">Не указан</option>
+                        <option *ngFor="let city of cities.value" value="{{city.code}}">{{city.name}}</option>
+                    </select>
+                </div>
+
+                <div class="top-margin form-group animated fadeIn has-feedback">
+                    <label>Компания </label>
+                    <input type="text" class="form-control" formControlName="company">
+                </div>
+
+                <div class="top-margin form-group animated fadeIn has-feedback">
+                    <label>О себе </label>
+                    <input type="text" class="form-control" formControlName="about">
+                </div>
+
+                <div class="top-margin form-group animated fadeIn has-feedback">
+                    <label>Награды </label>
+                    <input type="text" class="form-control" formControlName="awards">
+                </div>
+
+                <div class="top-margin form-group animated fadeIn has-feedback">
+                    <label>Портфолио </label>
+                    <textarea class="form-control" formControlName="portfolio"></textarea>
+                </div>
+
+                <div class="top-margin form-group animated fadeIn has-feedback">
+                    <label>Имеется загранпаспорт </label>
+                    <br />
+                    <input type="checkbox" data-toggle="toggle" formControlName="hasForeignPassport">
+                </div>
+
+                <div class="top-margin form-group animated fadeIn has-feedback">
+                    <label>Вес </label>
+                    <div class="input-group">
+                        <input type="number" class="form-control" formControlName="weight">
+                        <span class="input-group-addon">кг</span>
+                    </div>
+                </div>
+
+                <div class="top-margin form-group animated fadeIn has-feedback">
+                    <label>Рост </label>
+                    <div class="input-group">
+                        <input type="number" class="form-control" formControlName="growth">
+                        <span class="input-group-addon">см</span>
+                    </div>
+                </div>
+
+                <div class="top-margin form-group animated fadeIn has-feedback">
+                    <label>Цвет глаз </label>
+                    <select formControlName="eyes" class="form-control">
+                        <option value="null_value">Не указан</option>
+                        <option *ngFor="let eyes_item of eyes.value" value="{{eyes_item.code}}">{{eyes_item.name}}</option>
+                    </select>
+                </div>
+
+                <div class="top-margin form-group animated fadeIn has-feedback">
+                    <label>Вокал </label>
+                    <select multiple formControlName="vocal" class="form-control">
+                        <option *ngFor="let vocal_item of vocal.value" value="{{vocal_item.code}}">{{vocal_item.name}}</option>
+                    </select>
+                    <button class="form-control" (click)="control_vocal.setValue([]); control_vocal.markAsDirty(); false" [disabled]="!control_vocal.value.length">Убрать все</button>
+                </div>
+
+                <div class="top-margin form-group animated fadeIn has-feedback">
+                    <label>Хореография </label>
+                    <select multiple formControlName="dance" class="form-control">
+                        <option *ngFor="let dance_item of dance.value" value="{{dance_item.code}}">{{dance_item.name}}</option>
+                    </select>
+                    <button class="form-control" (click)="control_dance.setValue([]); control_dance.markAsDirty(); false" [disabled]="!control_dance.value.length">Убрать все</button>
+                </div>
+
+                <div class="top-margin form-group animated fadeIn has-feedback">
+                    <label>Должности </label>
+                    <select multiple formControlName="positions" class="form-control">
+                        <option *ngFor="let position of positions.value" value="{{position.code}}">{{position.name}}</option>
+                    </select>
+                    <button class="form-control" (click)="control_positions.setValue([]); control_positions.markAsDirty(); false" [disabled]="!control_positions.value.length">Убрать все</button>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <p>
+                            <button type="submit" class="btn btn-primary btn-lg btn-block" [disabled]="form.pristine || !form.valid">Сохранить</button>
+                        </p>
+                    </div>
+                    <div class="col-lg-6">
+                        <p>
+                            <button type="button" class="btn btn-default btn-lg btn-block" (click)="onReset()" [disabled]="form.pristine">Сброс</button>
+                        </p>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</article>

@@ -1,0 +1,16 @@
+<!-- Sidebar -->
+<aside class="col-md-2 sidebar sidebar-left">
+
+    <img class="avatar img-circle animated fadeIn" src="{{ smallAvatarUrl }}" *ngIf="user" />
+
+    <div class="list-group padding-top-20" *ngIf="user">
+        <a routerLink="/my/profile" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="list-group-item">Профиль</a>
+        <a routerLink="/my/avatar" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="list-group-item">Аватар</a>
+        <a style="pointer-events: none;" routerLink="/my/messages" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="list-group-item">Мои сообщения <span class="badge">11</span></a>
+        <a routerLink="/my/gallery" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="list-group-item">Мои фотографии</a>
+        <a style="pointer-events: none;" routerLink="/my/projects" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="list-group-item">Мои проекты</a>
+        <a style="pointer-events: none;" routerLink="/my/positions" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="list-group-item">Мои заявки <span class="badge">3</span></a>
+    </div>
+
+</aside>
+<!-- /Sidebar -->

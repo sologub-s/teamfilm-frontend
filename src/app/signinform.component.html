@@ -1,0 +1,40 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+    <div class="top-margin form-group animated fadeIn has-feedback" [ngClass]="{
+                    'has-error': validator().email_has_error,
+                    'has-success': validator().email_has_success
+                    }">
+        <label>Email <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="email">
+        <span *ngIf="validator().email_error_required" class="help-block animated fadeInDown">Email не может быть пустым</span>
+        <span *ngIf="validator().email_error_email" class="help-block animated fadeInDown">Введите действительный email</span>
+        <span *ngIf="validator().email_show_remove || validator().email_show_ok" [ngClass]="{
+                            'glyphicon-remove':validator().email_show_remove,
+                            'glyphicon-ok':validator().email_show_ok
+                            }" class="glyphicon form-control-feedback animated fadeIn" aria-hidden="true"></span>
+    </div>
+    <div class="top-margin form-group animated fadeIn has-feedback" [ngClass]="{
+                    'has-error': validator().password_has_error,
+                    'has-success': validator().password_has_success
+                    }">
+        <label>Пароль <span class="text-danger">*</span></label>
+        <input type="password" class="form-control" formControlName="password">
+        <span *ngIf="validator().password_error_required" class="help-block animated fadeInDown">Пароль не может быть пустым</span>
+        <span *ngIf="validator().password_error_minlength" class="help-block animated fadeInDown">Минимальная длинна пароля - {{control_password.errors.minlength.requiredLength}} символов</span>
+        <span *ngIf="validator().password_show_remove || validator().password_show_ok" [ngClass]="{
+                            'glyphicon-remove':validator().password_show_remove,
+                            'glyphicon-ok':validator().password_show_ok
+                            }" class="glyphicon form-control-feedback animated fadeIn" aria-hidden="true"></span>
+    </div>
+
+    <hr>
+
+    <div class="row animated fadeIn">
+        <div class="col-lg-8">
+            <b><a routerLink="/resetpasswordrequest">Забыли пароль?</a></b>
+        </div>
+        <div class="col-lg-4 text-right">
+            <button id="sign_component_loginButton" autocomplete="off" data-loading-text="<i class='fa fa-spinner fa-spin fa-fw'></i>" class="btn btn-action" type="submit" [disabled]="!form.valid">Войти</button>
+        </div>
+    </div>
+</form>
