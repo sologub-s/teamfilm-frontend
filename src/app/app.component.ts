@@ -2,7 +2,7 @@ import {Component, OnInit, OnDestroy} from '@angular/core';
 import {Router} from '@angular/router';
 
 import { ApiService } from './api.service';
-import { AuthService } from './auth.service';
+import { UserService } from './user.service';
 
 @Component({
     selector: 'my-app',
@@ -13,11 +13,11 @@ export class AppComponent implements OnInit, OnDestroy {
     constructor(
         private router: Router,
         private apiService: ApiService,
-        private authService: AuthService
+        private userService: UserService
     ) {}
 
     ngOnInit () {
-        this.authService.initSession();
+        this.userService.initSession();
     }
 
     ngOnDestroy(): void {
@@ -30,16 +30,16 @@ export class AppComponent implements OnInit, OnDestroy {
 
     /*
     private installAuthority (value : any) {
-        this.authService.setAuthorizedNext(true);
+        this.userService.setAuthorizedNext(true);
         localStorage.setItem('authority', JSON.stringify(value));
         this.apiService.setAccessToken(value.access_token);
     }
 
     private uninstallAuthority() {
-        this.authService.setAuthorizedNext(false);
+        this.userService.setAuthorizedNext(false);
         localStorage.removeItem('authority');
         this.apiService.setAccessToken(null);
-        this.authService.getUser().next(null);
+        this.userService.getUser().next(null);
     }
     */
 

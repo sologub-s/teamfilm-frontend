@@ -3,10 +3,23 @@ import {Injectable} from '@angular/core';
 import 'rxjs/add/operator/toPromise';
 import { BehaviorSubject } from 'rxjs/Rx';
 
+import { ConfigService } from './config.service';
 import { ApiService } from './api.service';
+import {createUrlResolverWithoutPackagePrefix} from "@angular/compiler";
 
 @Injectable()
-export class AuthService {
+export class UserService {
+
+
+    public currentUser = new BehaviorSubject(null);
+    private authorized = new BehaviorSubject(false);
+
+    private authority = new BehaviorSubject(
+        localStorage.getItem('authority')
+            ? JSON.parse(localStorage.getItem('authority'))
+            : null);
+
+    public users = {};
 
     public loginUrl = '/user/login';
     public logoutUrl = '/user/logout';
@@ -20,30 +33,26 @@ export class AuthService {
     public resetpasswordverificationUrl = '/user/resetpasswordverification';
     public userUrl = '/user';
 
-    constructor(private apiService: ApiService) { }
+    constructor(
+        private configService: ConfigService,
+        private apiService: ApiService
+    ) { }
 
     public loadUser (id : string) : Promise<any> {
+        if(!this.users.hasOwnProperty(id)) {
+            this.users[id] = new BehaviorSubject(null);
+        }
         return this.apiService
             .get(`${this.userUrl}/${id}`)
             .then(res => {
-                this.user.next(res.json().user);
+                this.users[res.json().user.id].next(res.json().user);
+                this.currentUser.next(res.json().user);
             });
     }
-
-    private authority = new BehaviorSubject(
-        localStorage.getItem('authority')
-            ? JSON.parse(localStorage.getItem('authority'))
-            : null);
-
-    public user = new BehaviorSubject(null);
-
-    private authorized = new BehaviorSubject(false);
 
     getAccessToken () : string {
         return this.authority.value ? this.authority.value.access_token : null;
     }
-
-    public isAuthorizedAndLoaded : boolean = this.authorized.getValue() && this.user.getValue();
 
     setAuthorizedNext(value : boolean) {
         this.authorized.next(value);
@@ -57,30 +66,45 @@ export class AuthService {
                 this.apiService.setAccessToken(value.access_token);
                 this.loadUser(value.user_id).then((res) => {
                 }, rej => {
-                    //this.uninstallAuthority();
                     this.uninstallAuthority();
                 });
             } else {
-                //this.uninstallAuthority();
                 this.uninstallAuthority();
             }
         });
+    }
+
+    getSmallAvatarUrl(user : {}) : string {
+
+        if (user && user['avatar_cropped']) {
+            return `${this.configService.g()['storageUrl']}${user['avatar_cropped'].url}`;
+        }
+        if (user && user['avatar']) {
+            return `${this.configService.g()['storageUrl']}${user['avatar'].url}`;
+        }
+        return 'assets/images/defaultAvatar.png';
+    }
+
+    getAvatarUrl(user : {}) : string {
+        if (user && user['avatar']) {
+            return `${this.configService.g()['storageUrl']}${user['avatar'].url}`;
+        }
+        return 'assets/images/defaultAvatar.png';
     }
 
     public uninstallAuthority() {
         this.setAuthorizedNext(false);
         localStorage.removeItem('authority');
         this.apiService.setAccessToken(null);
-        this.user.next(null);
+        this.currentUser.next(null);
+        this.users = {};
     }
 
     public getEmailExist (value : string) : Promise<any> {
         return this.apiService.get(`${this.getEmailExistUrl}/${value}`)
             .then(res => {
-                console.warn('resolve auth.service / getEmailExist', res);
                 return Promise.resolve(res);
             }, rej => {
-                console.warn('reject auth.service / getEmailExist', rej);
                 return Promise.reject(rej);
             });
     }
@@ -88,10 +112,8 @@ export class AuthService {
     public getNicknameExist (value : string) : Promise<any> {
         return this.apiService.get(`${this.getNicknameExistUrl}/${value}`)
             .then(res => {
-                console.warn('resolve auth.service / getNicknameExist', res);
                 return Promise.resolve(res);
             }, rej => {
-                console.warn('reject auth.service / getNicknameExist', rej);
                 return Promise.reject(rej);
             });
     }
@@ -99,10 +121,8 @@ export class AuthService {
     public getByField (field : string, value : string) : Promise<any> {
         return this.apiService.get(`${this.getByUrl}/${field}/${value}`)
             .then(res => {
-                console.warn('resolve auth.service / getByField', res);
                 return Promise.resolve(res);
             }, rej => {
-                console.warn('reject auth.service / getByField', rej);
                 return Promise.reject(rej);
             });
     }
@@ -124,18 +144,16 @@ export class AuthService {
             .then(res => {
                 return Promise.resolve(res);
             }, rej => {
-                console.warn('reject auth.service / signup', rej);
                 return Promise.reject(rej);
             });
     }
 
     public update (user: Object) {
         return this.apiService
-            .patch(`${this.updateUrl}/${this.user.value.id}`, JSON.stringify({user}))
+            .patch(`${this.updateUrl}/${this.currentUser.value.id}`, JSON.stringify({user}))
             .then(res => {
                 return Promise.resolve(res);
             }, rej => {
-                console.warn('reject auth.service / update', rej);
                 return Promise.reject(rej);
             });
     }
@@ -155,7 +173,6 @@ export class AuthService {
             .then(res => {
                 this.authority.next(res.json().authority);
             }, rej => {
-                console.warn('reject auth.service / login', rej);
                 return Promise.reject(rej);
             });
     }
@@ -173,7 +190,6 @@ export class AuthService {
             .then(res => {
                 this.authority.next(null);
             }, rej => {
-                console.warn('reject auth.service / logout', rej);
                 return Promise.reject(rej);
             });
     }
@@ -191,7 +207,6 @@ export class AuthService {
             .then(res => {
                 return Promise.resolve(res);
             }, rej => {
-                console.warn('reject auth.service / resetpasswordrequest', rej);
                 return Promise.reject(rej);
             });
     }
@@ -210,7 +225,6 @@ export class AuthService {
             .then(res => {
                 return Promise.resolve(res);
             }, rej => {
-                console.warn('reject auth.service / resetpasswordverification', rej);
                 return Promise.reject(rej);
             });
     }
@@ -230,7 +244,6 @@ export class AuthService {
                 }
                 return Promise.resolve(res);
             }, rej => {
-                console.warn('reject auth.service / activation', rej);
                 return Promise.reject(rej);
             });
     }

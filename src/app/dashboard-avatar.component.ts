@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { FileUploader } from 'ng2-file-upload';
 
 import { ConfigService } from './config.service';
-import { AuthService } from './auth.service';
+import { UserService } from './user.service';
 import { ApiService } from './api.service';
 
 import 'rxjs/add/operator/switchMap';
@@ -29,7 +29,7 @@ export class DashboardavatarComponent implements OnInit, AfterViewChecked {
 
     constructor(
         private configService : ConfigService,
-        private authService : AuthService,
+        private userService : UserService,
         private apiService : ApiService
     ) {}
 
@@ -64,21 +64,21 @@ export class DashboardavatarComponent implements OnInit, AfterViewChecked {
             file: this.control_file
         });
 
-        this.user = this.authService.user;
-        this.authService.user.subscribe(user => {
+        this.user = this.userService.currentUser;
+        this.userService.currentUser.subscribe(user => {
             this.user = user;
-            this.smallAvatarUrl = this.getSmallAvatarUrl();
-            this.avatarUrl = this.getAvatarUrl();
+            this.smallAvatarUrl = this.userService.getSmallAvatarUrl(user);
+            this.avatarUrl = this.userService.getAvatarUrl(user);
             if (user) {
                 this.uploader = new FileUploader({
                     url: `${this.configService.g()['apiUrl']}/user/${user.id}/avatar`,
-                    headers: [{name: 'X-Auth', value: this.authService.getAccessToken()}],
+                    headers: [{name: 'X-Auth', value: this.userService.getAccessToken()}],
                     itemAlias: 'avatar[]',
                     queueLimit: 1
                 });
                 this.uploader.onCompleteAll = () => {
                     this.uploader.clearQueue();
-                    this.authService.loadUser(this.authService.user.value.id);
+                    this.userService.loadUser(this.userService.currentUser.value.id);
                     this.croppie_mode = 'current';
                 };
                 this.uploader.onAfterAddingFile = (file: any) => {
@@ -86,23 +86,6 @@ export class DashboardavatarComponent implements OnInit, AfterViewChecked {
                 }
             }
         });
-    }
-
-    getSmallAvatarUrl() : string {
-        if (this.user && this.user['avatar_cropped']) {
-            return `${this.configService.g()['storageUrl']}${this.user['avatar_cropped'].url}`;
-        }
-        if (this.user && this.user['avatar']) {
-            return `${this.configService.g()['storageUrl']}${this.user['avatar'].url}`;
-        }
-        return 'assets/images/defaultAvatar.png';
-    }
-
-    getAvatarUrl() : string {
-        if (this.user && this.user['avatar']) {
-            return `${this.configService.g()['storageUrl']}${this.user['avatar'].url}`;
-        }
-        return 'assets/images/defaultAvatar.png';
     }
 
     public cancelUploading() {
@@ -127,7 +110,7 @@ export class DashboardavatarComponent implements OnInit, AfterViewChecked {
     }
 
     public onCrop() {
-        this.apiService.post(`/user/${this.authService.user.value.id}/avatar/crop`, {
+        this.apiService.post(`/user/${this.userService.currentUser.value.id}/avatar/crop`, {
             crop: {
                 x: this.croppieDirective.croppie['get']().points[0],
                 y: this.croppieDirective.croppie['get']().points[1],
@@ -135,7 +118,7 @@ export class DashboardavatarComponent implements OnInit, AfterViewChecked {
                 h: this.croppieDirective.croppie['get']().points[3] - this.croppieDirective.croppie['get']().points[1]
             }
         }).then(res => {
-            this.authService.loadUser(this.authService.user.value.id);
+            this.userService.loadUser(this.userService.currentUser.value.id);
             this.croppie_mode = 'current';
         })
     }

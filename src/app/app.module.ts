@@ -23,7 +23,7 @@ import { SignComponent } from './sign.component';
 
 import { ConfigService } from "./config.service";
 import { ApiService } from "./api.service";
-import { AuthService } from "./auth.service";
+import { UserService } from "./user.service";
 import { ValidatorsService } from './validators.service';
 
 import { ErrorService } from "./error.service";
@@ -60,7 +60,7 @@ import { ResetpasswordverificationformComponent } from "./resetpasswordverificat
     ResetpasswordrequestformComponent,
     ResetpasswordverificationformComponent
   ],
-  providers:    [ ConfigService, ApiService, AuthService, ErrorService, ValidatorsService ],
+  providers:    [ ConfigService, ApiService, UserService, ErrorService, ValidatorsService ],
   bootstrap:    [ AppComponent ]
 })
 export class AppModule { }

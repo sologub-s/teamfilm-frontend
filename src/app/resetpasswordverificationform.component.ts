@@ -2,7 +2,7 @@ import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import { AuthService } from './auth.service';
+import { UserService } from './user.service';
 import { ValidatorsService } from './validators.service';
 
 import 'rxjs/add/operator/switchMap';
@@ -14,7 +14,7 @@ import 'rxjs/add/operator/switchMap';
 export class ResetpasswordverificationformComponent implements OnInit {
 
     constructor(
-        private authService : AuthService,
+        private userService : UserService,
         private validatorsService : ValidatorsService,
         private activatedRoute : ActivatedRoute
     ) {}
@@ -87,7 +87,7 @@ export class ResetpasswordverificationformComponent implements OnInit {
 
         this.requestInProgress = true;
 
-        this.authService.resetpasswordverification(this.form.value.token, this.form.value.password).then(res => {
+        this.userService.resetpasswordverification(this.form.value.token, this.form.value.password).then(res => {
             this.onSubmitEmitter.emit({status:200,navigateTo:'/signin'});
         }, rej => {
             switch (rej.status) {

@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { FileUploader } from 'ng2-file-upload';
 
 import { ConfigService } from './config.service';
-import { AuthService } from './auth.service';
+import { UserService } from './user.service';
 import { ApiService } from './api.service';
 
 import 'rxjs/add/operator/switchMap';
@@ -26,7 +26,7 @@ export class DashboardgalleryComponent implements OnInit {
 
     constructor(
         private configService : ConfigService,
-        private authService : AuthService,
+        private userService : UserService,
         private apiService: ApiService,
         private domSanitizer: DomSanitizer
     ) {}
@@ -44,19 +44,19 @@ export class DashboardgalleryComponent implements OnInit {
             file: this.control_file
         });
 
-        this.user = this.authService.user;
-        this.authService.user.subscribe(user => {
+        this.user = this.userService.currentUser;
+        this.userService.currentUser.subscribe(user => {
             this.user = user;
             if (user) {
                 this.uploader = new FileUploader({
                     url: `${this.configService.g()['apiUrl']}/user/${user.id}/images`,
-                    headers: [{name: 'X-Auth', value: this.authService.getAccessToken()}],
+                    headers: [{name: 'X-Auth', value: this.userService.getAccessToken()}],
                     itemAlias: 'image[]',
                     queueLimit: this.configService.g()['maxImages'] - (user.images.length > this.configService.g()['maxImages'] ? this.configService.g()['maxImages'] : user.images.length)
                 });
                 this.uploader.onCompleteAll = () => {
                     this.uploader.clearQueue();
-                    this.authService.loadUser(this.authService.user.value.id);
+                    this.userService.loadUser(this.userService.currentUser.value.id);
                 };
                 this.uploader.onAfterAddingFile = (file: any) => {
                     file.withCredentials = false;
@@ -73,9 +73,9 @@ export class DashboardgalleryComponent implements OnInit {
         console.log(`data-image-identity='${identity}'`);
         $(`[data-image-identity='${identity}'] i`).hide();
         return this.apiService
-            .delete(`${this.authService.userUrl}/${this.user.id}/image/${identity}`)
+            .delete(`${this.userService.currentUser}/${this.user.id}/image/${identity}`)
             .then(res => {
-                this.authService.loadUser(this.user.id);
+                this.userService.loadUser(this.user.id);
             });
     }
 

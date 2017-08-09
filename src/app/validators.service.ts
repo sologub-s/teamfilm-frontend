@@ -5,14 +5,14 @@ import { Injectable } from '@angular/core';
 
 import {ValidationErrors, ValidatorFn, AbstractControl, FormGroup, FormControl} from '@angular/forms';
 
-import { AuthService } from './auth.service';
+import { UserService } from './user.service';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/Rx';
 
 @Injectable()
 export class ValidatorsService {
 
-    constructor(private authService: AuthService) { }
+    constructor(private userService: UserService) { }
 
     /**
      * Validator that performs nickname validation.
@@ -67,7 +67,7 @@ export class ValidatorsService {
             return Promise.reject(null);
         }
 
-        return this.authService.getEmailExist(value).then(res => {
+        return this.userService.getEmailExist(value).then(res => {
             if (res.json().emailExist) {
                 control.setErrors(Object.assign(control.errors ? control.errors : {}, {uniqueEmail:true}));
             }
@@ -84,7 +84,7 @@ export class ValidatorsService {
             return Promise.reject(null);
         }
 
-        return this.authService.getNicknameExist(value).then(res => {
+        return this.userService.getNicknameExist(value).then(res => {
             if (res.json().nicknameExist) {
                 control.setErrors(Object.assign(control.errors ? control.errors : {}, {uniqueNickname:true}));
             }

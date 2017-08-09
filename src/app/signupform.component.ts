@@ -1,7 +1,7 @@
 import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
-import { AuthService } from './auth.service';
+import { UserService } from './user.service';
 import { ValidatorsService } from './validators.service';
 
 import 'rxjs/add/operator/switchMap';
@@ -13,7 +13,7 @@ import 'rxjs/add/operator/switchMap';
 export class SignupformComponent implements OnInit {
 
     constructor(
-        private authService : AuthService,
+        private userService : UserService,
         private validatorsService : ValidatorsService
     ) {}
 
@@ -135,7 +135,7 @@ export class SignupformComponent implements OnInit {
 
         this.requestInProgress = true;
         setTimeout(() => {
-            this.authService.signup(this.form.value.email, this.form.value.password, this.form.value.name, this.form.value.surname, this.form.value.nickname, this.form.value.agree).then((res) => {
+            this.userService.signup(this.form.value.email, this.form.value.password, this.form.value.name, this.form.value.surname, this.form.value.nickname, this.form.value.agree).then((res) => {
                 this.onSubmitEmitter.emit({status:200,navigateTo:'/activation'});
             }, rej => {
                 switch (rej.status) {

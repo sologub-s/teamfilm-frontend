@@ -2,7 +2,7 @@ import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { AuthService } from './auth.service';
+import { UserService } from './user.service';
 
 import 'rxjs/add/operator/switchMap';
 
@@ -13,7 +13,7 @@ import 'rxjs/add/operator/switchMap';
 export class SigninformComponent implements OnInit {
 
     constructor(
-        private authService : AuthService
+        private userService : UserService
     ) {}
 
     public form: FormGroup;
@@ -65,7 +65,7 @@ export class SigninformComponent implements OnInit {
 
         this.requestInProgress = true;
 
-        this.authService.login(this.form.value.email, this.form.value.password).then((res) => {
+        this.userService.login(this.form.value.email, this.form.value.password).then((res) => {
             this.onSubmitEmitter.emit({status:200,navigateTo:'/my/profile'});
         }, rej => {
             switch (rej.status) {

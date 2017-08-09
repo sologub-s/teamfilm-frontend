@@ -1,6 +1,6 @@
 import {Component, OnInit, AfterViewChecked} from '@angular/core';
 
-import { AuthService } from './auth.service';
+import { UserService } from './user.service';
 import { ApiService } from './api.service';
 import { ValidatorsService } from './validators.service';
 import { FormGroup, FormControl, Validators } from "@angular/forms";
@@ -16,7 +16,7 @@ declare var $ :any;
 export class DashboardmainComponent implements OnInit, AfterViewChecked {
 
     constructor(
-        private authService : AuthService,
+        private userService : UserService,
         private apiService : ApiService,
         private validatorsService : ValidatorsService
     ) {}
@@ -117,8 +117,8 @@ export class DashboardmainComponent implements OnInit, AfterViewChecked {
             }
         };
 
-        this.user = this.authService.user;
-        this.authService.user.subscribe(user => {
+        this.user = this.userService.currentUser;
+        this.userService.currentUser.subscribe(user => {
             this.user = user;
             if (user) {
                 this.control_name.setValue(user.name);
@@ -207,7 +207,7 @@ export class DashboardmainComponent implements OnInit, AfterViewChecked {
     }
 
     public onSubmit() {
-        this.authService.update({
+        this.userService.update({
             name: this.form.value.name,
             surname: this.form.value.surname,
             sex: this.form.value.sex === 'null_value' ? null : this.form.value.sex,
@@ -227,7 +227,7 @@ export class DashboardmainComponent implements OnInit, AfterViewChecked {
             dance: this.form.value.dance,
             positions: this.form.value.positions,
         }).then(res => {
-            this.authService.loadUser(this.user.id)
+            this.userService.loadUser(this.user.id)
                 .then(res => {
                     this.onReset();
                 });

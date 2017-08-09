@@ -3,7 +3,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import 'rxjs/add/operator/switchMap';
 
 import { ConfigService } from './config.service';
-import { AuthService } from './auth.service';
+import { UserService } from './user.service';
 
 @Component({
     selector: 'my-topnav',
@@ -13,28 +13,18 @@ export class TopnavComponent implements OnInit {
 
     constructor(
         private configService : ConfigService,
-        private authService : AuthService,
+        private userService : UserService,
     ) {}
 
     public user : any = null;
     public smallAvatarUrl : string;
 
     ngOnInit() {
-        this.user = this.authService.user;
-        this.authService.user.subscribe(user => {
+        this.user = this.userService.currentUser;
+        this.userService.currentUser.subscribe(user => {
             this.user = user;
-            this.smallAvatarUrl = this.getSmallAvatarUrl();
+            this.smallAvatarUrl = this.userService.getSmallAvatarUrl(user);
         });
-    }
-
-    getSmallAvatarUrl() : string {
-        if (this.user && this.user['avatar_cropped']) {
-            return `${this.configService.g()['storageUrl']}${this.user['avatar_cropped'].url}`;
-        }
-        if (this.user && this.user['avatar']) {
-            return `${this.configService.g()['storageUrl']}${this.user['avatar'].url}`;
-        }
-        return 'assets/images/defaultAvatar.png';
     }
 
 }
