@@ -6,13 +6,17 @@ import { Injectable } from '@angular/core';
 import {ValidationErrors, ValidatorFn, AbstractControl, FormGroup, FormControl} from '@angular/forms';
 
 import { UserService } from './user.service';
+import { ProjectService } from './project.service';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/Rx';
 
 @Injectable()
 export class ValidatorsService {
 
-    constructor(private userService: UserService) { }
+    constructor(
+        private userService: UserService,
+        private projectService: ProjectService
+    ) { }
 
     /**
      * Validator that performs nickname validation.
@@ -87,6 +91,23 @@ export class ValidatorsService {
         return this.userService.getNicknameExist(value).then(res => {
             if (res.json().nicknameExist) {
                 control.setErrors(Object.assign(control.errors ? control.errors : {}, {uniqueNickname:true}));
+            }
+        });
+    }
+
+    uniqueProjectTitle(control: FormControl, value): Promise<any> {
+
+        if (control.errors && control.errors['uniqueProjectTitle']) {
+            delete control.errors['uniqueProjectTitle'];
+        }
+
+        if (!this.userService.currentUser.value.id || !value) {
+            return Promise.reject(null);
+        }
+
+        return this.projectService.getProjectByUserIdAndTitle(this.userService.currentUser.value.id, value).then(res => {
+            if (res.json().project) {
+                control.setErrors(Object.assign(control.errors ? control.errors : {}, {uniqueProjectTitle:true}));
             }
         });
     }

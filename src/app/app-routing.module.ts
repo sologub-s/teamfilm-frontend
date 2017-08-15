@@ -8,6 +8,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { DashboardmainComponent } from './dashboard-main.component';
 import { DashboardavatarComponent } from './dashboard-avatar.component';
 import { DashboardgalleryComponent } from './dashboard-gallery.component';
+import { DashboardprojectsComponent } from './dashboard-projects.component';
 import { ProjectsComponent } from './projects.component';
 import { SignComponent } from './sign.component';
 
@@ -16,6 +17,7 @@ const routes: Routes = [
     { path: 'my/profile',  component: DashboardmainComponent },
     { path: 'my/avatar',  component: DashboardavatarComponent },
     { path: 'my/gallery',  component: DashboardgalleryComponent },
+    { path: 'my/projects',  component: DashboardprojectsComponent },
     { path: 'my',  redirectTo: '/my/profile' },
     { path: 'projects',  component: ProjectsComponent },
     { path: 'signin',  component: SignComponent },

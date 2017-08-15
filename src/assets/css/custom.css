@@ -275,3 +275,7 @@ div.alert button.close {
     font-size: 2em;
 
 }
+
+.pagination li.disabled a {
+    pointer-events: none;
+}

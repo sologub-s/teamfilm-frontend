@@ -1,0 +1,39 @@
+<my-dashboard-menu></my-dashboard-menu>
+
+<!-- Article main content -->
+<article class="col-md-10 maincontent">
+
+    <div class="panel panel-default" *ngIf="user">
+        <div class="panel-body">
+
+            <my-projectnew></my-projectnew>
+
+            <hr />
+
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Название</th>
+                        <th>Описание</th>
+                        <th>Статус</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngFor="let project of projects">
+                        <tr>
+                            <td>{{project.title}}</td>
+                            <td>{{project.description.length > 25 ? (project.description | shorten) : project.description}}</td>
+                            <td>{{project.status}}</td>
+                            <td><button type="button" class="btn btn-default" (click)="openEditors.push(project.id); false" [disabled]="openEditors.indexOf(project.id) > -1">Изменить</button></td>
+                        </tr>
+                        <tr *ngIf="openEditors.indexOf(project.id) > -1"><td colspan="4">edit form</td></tr>
+                    </ng-container>
+                </tbody>
+            </table>
+
+            <my-pagination [criteria]="criteria" [radius]="1" [aria]="'Пагинация проектов'"></my-pagination>
+
+        </div>
+    </div>
+</article>

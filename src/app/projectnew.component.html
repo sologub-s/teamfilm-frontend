@@ -1,0 +1,41 @@
+<div class="alert alert-danger animated fadeIn" role="alert" *ngIf="error_message">
+    <button type="button" class="close" aria-label="Закрыть" (click)="error_message = null"><span aria-hidden="true">&times;</span></button>
+    {{ error_message }}
+</div>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-inline">
+
+    <div class="top-margin form-group animated fadeIn has-feedback" [ngClass]="{
+        'has-error': validator().title_has_error,
+        'has-success': validator().title_has_success
+        }">
+        <label>Title </label>
+        <input type="text" class="form-control" formControlName="title" />
+        <span *ngIf="validator().title_error_required" class="help-block animated fadeInDown">Title не может быть пустым</span>
+        <span *ngIf="validator().title_error_uniqueProjectTitle" class="help-block animated fadeInDown">Такой проект у вас уже существует</span>
+        <span *ngIf="validator().title_show_remove || validator().title_show_ok || validator().title_show_loading" [ngClass]="{
+                'glyphicon-remove':validator().title_show_remove,
+                'glyphicon-ok':validator().title_show_ok,
+                'glyphicon-refresh gly-spin':validator().title_show_loading
+                }" class="glyphicon form-control-feedback animated fadeIn" aria-hidden="true"></span>
+    </div>
+
+    <div class="top-margin form-group animated fadeIn has-feedback" [ngClass]="{
+        'has-error': validator().description_has_error,
+        'has-success': validator().description_has_success
+        }">
+        <label>Description </label>
+        <textarea class="form-control" formControlName="description"></textarea>
+        <span *ngIf="validator().description_error_required" class="help-block animated fadeInDown">Description не может быть пустым</span>
+        <span *ngIf="validator().description_show_remove || validator().description_show_ok || validator().description_show_loading" [ngClass]="{
+                'glyphicon-remove':validator().description_show_remove,
+                'glyphicon-ok':validator().description_show_ok,
+                'glyphicon-refresh gly-spin':validator().description_show_loading
+                }" class="glyphicon form-control-feedback animated fadeIn" aria-hidden="true"></span>
+    </div>
+
+    <div class="top-margin form-group animated fadeIn">
+        <button id="projectnew_submitButton" autocomplete="off" data-loading-text="<i class='fa fa-spinner fa-spin fa-fw'></i>" class="btn btn-action" type="submit" [disabled]="!form.valid || validator().loading">Создать</button>
+    </div>
+
+</form>

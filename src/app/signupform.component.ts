@@ -134,23 +134,21 @@ export class SignupformComponent implements OnInit {
         window['$']('#sign_component_signupButton').button('loading');
 
         this.requestInProgress = true;
-        setTimeout(() => {
-            this.userService.signup(this.form.value.email, this.form.value.password, this.form.value.name, this.form.value.surname, this.form.value.nickname, this.form.value.agree).then((res) => {
-                this.onSubmitEmitter.emit({status:200,navigateTo:'/activation'});
-            }, rej => {
-                switch (rej.status) {
-                    case 400:
-                        this.onSubmitEmitter.emit({status:400,custom_error_message:"Неправильные данные."});
-                        break;
-                    case 409:
-                        this.onSubmitEmitter.emit({status:409,custom_error_message:"Такой email или nickname уже существуют."});
-                        break;
-                    default:
-                        this.onSubmitEmitter.emit({status:null});
-                        break;
-                }
-            }).then(() => { window['$']('#sign_component_signupButton').button('reset'); this.requestInProgress = false; this.form.reset(); });
-        }, 3000);
+        this.userService.signup(this.form.value.email, this.form.value.password, this.form.value.name, this.form.value.surname, this.form.value.nickname, this.form.value.agree).then((res) => {
+            this.onSubmitEmitter.emit({status:200,navigateTo:'/activation'});
+        }, rej => {
+            switch (rej.status) {
+                case 400:
+                    this.onSubmitEmitter.emit({status:400,custom_error_message:"Неправильные данные."});
+                    break;
+                case 409:
+                    this.onSubmitEmitter.emit({status:409,custom_error_message:"Такой email или nickname уже существуют."});
+                    break;
+                default:
+                    this.onSubmitEmitter.emit({status:null});
+                    break;
+            }
+        }).then(() => { window['$']('#sign_component_signupButton').button('reset'); this.requestInProgress = false; this.form.reset(); });
 
 
     }

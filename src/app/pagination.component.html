@@ -1,0 +1,71 @@
+<ng-container *ngIf="criteria.value && criteria.value.totalPages > 1">
+
+    <button *ngIf="nextPage" type="button" class="btn btn-action" [disabled]="!moreResultsAvailable" (click)="moreResultsAvailable = false ; loadMoreResults()">Загрузить ещё {{criteria.value.limit}}</button>
+
+    <nav [attr.aria-label]="aria">
+        <ul class="pagination">
+            <li [class.disabled]="!prevPage">
+                <a href="#" aria-label="Previous" (click)="gotoPage(prevPage) ; false"><span aria-hidden="true">&laquo;</span></a>
+            </li>
+
+            <ng-container *ngIf="showLeftDispersion">
+                <li><a href="#" (click)="gotoPage(1); false">1 <span class="sr-only">1</span></a></li>
+                <ng-container *ngIf="leftDispersionPages.length">
+                    <ng-container *ngFor="let block of leftDispersionPages; let b = index">
+                        <li *ngIf="!block?.renderChunks"><a href="#" (click)="block.renderChunks = true ; false">[{{block.startPage}}...{{block.endPage}}] <span class="sr-only">expand {{block.startPage}}-{{block.endPage}} </span></a></li>
+                        <ng-container *ngIf="block?.renderChunks">
+                            <ng-container *ngFor="let chunk of block.chunks; let c = index">
+                                <li *ngIf="!block['renderPages'+c]"><a href="#" (click)="block['renderPages'+c] = true; false">[{{chunk[0]}}...{{chunk[chunk.length-1]}}] <span class="sr-only">expand {{chunk[0]}}-{{chunk[chunk.length-1]}}</span></a></li>
+                                <ng-container *ngIf="block['renderPages'+c]">
+                                    <li *ngFor="let page of chunk"><a href="#" (click)="gotoPage(page); false">{{page}} <span class="sr-only">{{page}}</span></a></li>
+                                </ng-container>
+                            </ng-container>
+                        </ng-container>
+                    </ng-container>
+                </ng-container>
+                <ng-container *ngFor="let curpage of pagesArray, let i = index">
+                    <li *ngIf="i+1 < activePages[0] && i+1 >= activePages[0] - radius"><a href="#" (click)="gotoPage(i+1); false">{{i+1}} <span class="sr-only">{{i+1}}</span></a></li>
+                </ng-container>
+            </ng-container>
+            <ng-container *ngIf="!showLeftDispersion">
+                <ng-container *ngFor="let curpage of pagesArray, let i = index">
+                    <li *ngIf="i+1 < activePages[0]"><a href="#" (click)="gotoPage(i+1); false">{{i+1}} <span class="sr-only">{{i+1}}</span></a></li>
+                </ng-container>
+            </ng-container>
+
+            <ng-container *ngFor="let curpage of activePages, let i = index">
+                <li class="active"><a href="#" (click)="gotoPage(curpage); false">{{curpage}} <span class="sr-only">(current - {{curpage}})</span></a></li>
+            </ng-container>
+
+            <ng-container *ngIf="showRightDispersion">
+                <ng-container *ngFor="let curpage of pagesArray, let i = index">
+                    <li *ngIf="i+1 > activePages[activePages.length-1] && i+1 <= activePages[activePages.length-1] + radius"><a href="#" (click)="gotoPage(i+1); false">{{i+1}} <span class="sr-only">{{i+1}}</span></a></li>
+                </ng-container>
+                <ng-container *ngIf="rightDispersionPages.length">
+                    <ng-container *ngFor="let block of rightDispersionPages; let b = index">
+                        <li *ngIf="!block?.renderChunks"><a href="#" (click)="block.renderChunks = true ; false">[{{block.startPage}}...{{block.endPage}}] <span class="sr-only">expand {{block.startPage}}-{{block.endPage}} </span></a></li>
+                        <ng-container *ngIf="block?.renderChunks">
+                            <ng-container *ngFor="let chunk of block.chunks; let c = index">
+                                <li *ngIf="!block['renderPages'+c]"><a href="#" (click)="block['renderPages'+c] = true; false">[{{chunk[0]}}...{{chunk[chunk.length-1]}}] <span class="sr-only">expand {{chunk[0]}}-{{chunk[chunk.length-1]}}</span></a></li>
+                                <ng-container *ngIf="block['renderPages'+c]">
+                                    <li *ngFor="let page of chunk"><a href="#" (click)="gotoPage(page); false">{{page}} <span class="sr-only">{{page}}</span></a></li>
+                                </ng-container>
+                            </ng-container>
+                        </ng-container>
+                    </ng-container>
+                </ng-container>
+                <li><a href="#" (click)="gotoPage(criteria.value.totalPages); false">{{criteria.value.totalPages}} <span class="sr-only">{{criteria.value.totalPages}}</span></a></li>
+            </ng-container>
+            <ng-container *ngIf="!showRightDispersion">
+                <ng-container *ngFor="let curpage of pagesArray, let i = index">
+                    <li *ngIf="i+1 > activePages[activePages.length-1]"><a href="#" (click)="gotoPage(i+1); false">{{i+1}} <span class="sr-only">{{i+1}}</span></a></li>
+                </ng-container>
+            </ng-container>
+
+            <li [class.disabled]="!nextPage">
+                <a href="#" aria-label="Next" (click)="gotoPage(nextPage) ; false"><span aria-hidden="true">&raquo;</span></a>
+            </li>
+        </ul>
+    </nav>
+
+</ng-container>

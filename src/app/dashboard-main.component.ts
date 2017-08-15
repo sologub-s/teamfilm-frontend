@@ -58,7 +58,7 @@ export class DashboardmainComponent implements OnInit, AfterViewChecked {
         this.control_name = new FormControl('', [Validators.required]);
         this.control_surname = new FormControl('', [Validators.required]);
         this.control_sex = new FormControl('', [this.validatorsService.sex]);
-        this.control_birthday = new FormControl('', []);
+        this.control_birthday = new FormControl('');
         this.control_cellphone = new FormControl('', [this.validatorsService.cellphone]);
         this.control_country = new FormControl('');
         this.control_city = new FormControl('');
