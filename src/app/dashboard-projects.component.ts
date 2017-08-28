@@ -50,7 +50,6 @@ export class DashboardprojectsComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        console.log('afterViewInit');
         this.userService.currentUser.subscribe(user => {
             if(user) {
                 setTimeout(() => {
@@ -72,7 +71,6 @@ export class DashboardprojectsComponent implements OnInit, AfterViewInit {
             value.toArray().forEach(v => {
                 v.onSubmitEmitter.subscribe(message => {
                     if(message.status == 200) {
-                        console.log('zxc');
                         this.loadProjectsList(this.criteria.value.page);
                     }
                 });

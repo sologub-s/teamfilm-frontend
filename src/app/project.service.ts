@@ -27,7 +27,7 @@ export class ProjectService {
         if (project && project['logo']) {
             return `${this.configService.g()['storageUrl']}${project['logo'].url}`;
         }
-        return 'assets/images/defaultProjectLogo.png';
+        return 'assets/images/defaultLogo.png';
     }
 
     public get (id : String) {

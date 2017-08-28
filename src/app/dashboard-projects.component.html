@@ -13,6 +13,7 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
+                        <th>Лого</th>
                         <th>Название</th>
                         <th>Описание</th>
                         <th>Статус</th>
@@ -22,6 +23,7 @@
                 <tbody>
                     <ng-container *ngFor="let project of projects">
                         <tr>
+                            <td><img src="{{projectService.getLogoUrl(project)}}" class="table-row-image-30" /></td>
                             <td>{{project.title}}</td>
                             <td>{{project.description.length > 25 ? (project.description | shorten) : project.description}}</td>
                             <td>{{project.status}}</td>

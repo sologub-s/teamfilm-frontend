@@ -1,8 +1,10 @@
-<ng-container *ngIf="project">
+<ng-container *ngIf="project.value">
     <div class="alert alert-danger animated fadeIn" role="alert" *ngIf="error_message">
         <button type="button" class="close" aria-label="Закрыть" (click)="error_message = null"><span aria-hidden="true">&times;</span></button>
         {{ error_message }}
     </div>
+
+    <my-projectlogo #logo [projectId]="projectId"></my-projectlogo>
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
 

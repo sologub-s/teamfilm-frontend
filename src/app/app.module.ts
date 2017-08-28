@@ -22,6 +22,7 @@ import { DashboardgalleryComponent } from './dashboard-gallery.component';
 import { DashboardprojectsComponent } from './dashboard-projects.component';
 import { ProjectnewComponent } from './projectnew.component';
 import { ProjecteditComponent } from './projectedit.component';
+import { ProjectlogoComponent } from './projectlogo.component';
 import { ProjectsComponent } from './projects.component';
 import { SignComponent } from './sign.component';
 
@@ -63,6 +64,7 @@ import { ResetpasswordverificationformComponent } from "./resetpasswordverificat
     DashboardprojectsComponent,
     ProjectnewComponent,
     ProjecteditComponent,
+    ProjectlogoComponent,
     ProjectsComponent,
     SignComponent,
     SigninformComponent,

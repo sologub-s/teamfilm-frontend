@@ -1,4 +1,7 @@
-import {Component, OnInit, EventEmitter, Input, Output, AfterViewChecked} from '@angular/core';
+import {
+    Component, OnInit, EventEmitter, Input, Output, AfterViewChecked, AfterViewInit,
+    ViewChild
+} from '@angular/core';
 import {FormGroup, FormControl, Validators, ValidationErrors, AbstractControl} from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -9,6 +12,7 @@ import { ValidatorsService } from './validators.service';
 
 import 'rxjs/add/operator/switchMap';
 import {BehaviorSubject} from "rxjs";
+import {ProjectlogoComponent} from "./projectlogo.component";
 
 declare var jquery:any;
 declare var $ :any;
@@ -17,18 +21,14 @@ declare var $ :any;
     selector: 'my-projectedit',
     templateUrl: './projectedit.component.html'
 })
-export class ProjecteditComponent implements OnInit, AfterViewChecked {
-
-    constructor(
-        private router : Router,
-        private userService : UserService,
-        private apiService : ApiService,
-        private projectService : ProjectService,
-        private validatorsService : ValidatorsService
-    ) {}
+export class ProjecteditComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
     @Input() projectId = null;
     @Output() onSubmitEmitter = new EventEmitter<any>();
+
+
+    @ViewChild(ProjectlogoComponent)
+    private projectlogoComponent: ProjectlogoComponent;
 
     public error_message : string = null;
 
@@ -61,6 +61,14 @@ export class ProjecteditComponent implements OnInit, AfterViewChecked {
 
     public validator;
     public requestInProgress : boolean = false;
+
+    constructor(
+        private router : Router,
+        private userService : UserService,
+        private apiService : ApiService,
+        private projectService : ProjectService,
+        private validatorsService : ValidatorsService
+    ) {}
 
     ngOnInit() {
 
@@ -224,6 +232,20 @@ export class ProjecteditComponent implements OnInit, AfterViewChecked {
                 this.project.next(res.json().project);
             });
 
+    }
+
+    ngAfterViewInit () {
+        this.project.subscribe(project => {
+            if (project) {
+                setTimeout(() => {
+                    this.projectlogoComponent.onSubmitEmitter.subscribe((message) => {
+                        if (message.action == 'uploaded') {
+                            this.onSubmitEmitter.emit({status:200});
+                        }
+                    });
+                }, 0);
+            }
+        });
     }
 
     ngAfterViewChecked() {

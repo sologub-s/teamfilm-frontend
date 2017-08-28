@@ -279,3 +279,7 @@ div.alert button.close {
 .pagination li.disabled a {
     pointer-events: none;
 }
+
+.table-row-image-30 {
+    max-height: 30px;
+}
