@@ -45,6 +45,18 @@ export class ValidatorsService {
         };
     }
 
+    required_if_not_on_hold(control: AbstractControl): ValidationErrors | null {
+        if(!control.parent) {
+            return null;
+        }
+        console.log('control.value', control.value);
+        return control.parent.controls['status'].value !== 'on_hold' && (control.value === 'null_value' || control.value == '' || control.value == null) ? {
+            required_if_not_on_hold: {
+                valid: false
+            }
+        } : null;
+    }
+
     passwordsAreEqual(key1, key2) {
 
         return (group: FormGroup): {[key: string]: any} => {
@@ -95,7 +107,7 @@ export class ValidatorsService {
         });
     }
 
-    uniqueProjectTitle(control: FormControl, value): Promise<any> {
+    uniqueProjectTitle(control: FormControl, value, ignoreId = null): Promise<any> {
 
         if (control.errors && control.errors['uniqueProjectTitle']) {
             delete control.errors['uniqueProjectTitle'];
@@ -107,6 +119,9 @@ export class ValidatorsService {
 
         return this.projectService.getProjectByUserIdAndTitle(this.userService.currentUser.value.id, value).then(res => {
             if (res.json().project) {
+                if (ignoreId && res.json().project.id === ignoreId) {
+                    return;
+                }
                 control.setErrors(Object.assign(control.errors ? control.errors : {}, {uniqueProjectTitle:true}));
             }
         });

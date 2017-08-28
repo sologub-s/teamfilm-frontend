@@ -199,6 +199,7 @@ export class DashboardmainComponent implements OnInit, AfterViewChecked {
         var month = date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
         var day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
         this.birthday_visible = `${date.getFullYear()}-${month}-${day}`;
+        console.log(v, this.birthday_visible);
         if($("[name='birthday_visible'].datepickered").length) {
             if($("[name='birthday_visible'].datepickered").datepicker('getDate').getTime() !== date.getTime()) {
                 $("[name='birthday_visible'].datepickered").datepicker('setDate', date);
@@ -256,12 +257,5 @@ export class DashboardmainComponent implements OnInit, AfterViewChecked {
             positions: this.user.positions,
         });
         $("[formControlName='hasForeignPassport']").bootstrapSwitch('state', this.user.hasForeignPassport, true);
-    }
-
-    public fillBirthday (birthday) {
-        var date = new Date(birthday * 1000);
-        var month = date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
-        var day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
-        this.birthday_visible = `${date.getFullYear()}-${month}-${day}`;
     }
 }

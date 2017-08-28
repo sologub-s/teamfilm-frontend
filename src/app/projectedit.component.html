@@ -1,0 +1,157 @@
+<ng-container *ngIf="project">
+    <div class="alert alert-danger animated fadeIn" role="alert" *ngIf="error_message">
+        <button type="button" class="close" aria-label="Закрыть" (click)="error_message = null"><span aria-hidden="true">&times;</span></button>
+        {{ error_message }}
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+        <div class="top-margin form-group animated fadeIn has-feedback" [ngClass]="{
+            'has-error': validator().title_has_error,
+            'has-success': validator().title_has_success
+            }">
+            <label>Title <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" formControlName="title" />
+            <span *ngIf="validator().title_error_required" class="help-block animated fadeInDown">Title не может быть пустым</span>
+            <span *ngIf="validator().title_error_uniqueProjectTitle" class="help-block animated fadeInDown">Такой проект у вас уже существует</span>
+            <span *ngIf="validator().title_show_remove || validator().title_show_ok || validator().title_show_loading" [ngClass]="{
+                    'glyphicon-remove':validator().title_show_remove,
+                    'glyphicon-ok':validator().title_show_ok,
+                    'glyphicon-refresh gly-spin':validator().title_show_loading
+                    }" class="glyphicon form-control-feedback animated fadeIn" aria-hidden="true"></span>
+        </div>
+
+        <div class="top-margin form-group animated fadeIn has-feedback" [ngClass]="{
+            'has-error': validator().description_has_error,
+            'has-success': validator().description_has_success
+            }">
+            <label>Description <span class="text-danger">*</span></label>
+            <textarea class="form-control" formControlName="description"></textarea>
+            <span *ngIf="validator().description_error_required" class="help-block animated fadeInDown">Description не может быть пустым</span>
+            <span *ngIf="validator().description_show_remove || validator().description_show_ok || validator().description_show_loading" [ngClass]="{
+                    'glyphicon-remove':validator().description_show_remove,
+                    'glyphicon-ok':validator().description_show_ok,
+                    'glyphicon-refresh gly-spin':validator().description_show_loading
+                    }" class="glyphicon form-control-feedback animated fadeIn" aria-hidden="true"></span>
+        </div>
+
+        <div class="top-margin form-group animated fadeIn has-feedback">
+            <label>Статус </label>
+            <select formControlName="status" class="form-control">
+                <option value="on_hold">В ожидании</option>
+                <option value="in_progress">В работе</option>
+                <option value="done">Завершен</option>
+            </select>
+        </div>
+
+        <div class="top-margin form-group animated fadeIn has-feedback" [ngClass]="{
+            'has-error': validator().type_has_error,
+            'has-success': validator().type_has_success
+            }">
+            <label>Тип проекта <span class="text-danger" *ngIf="control_status.value !== 'on_hold'">*</span></label>
+            <select formControlName="type" class="form-control">
+                <option value="null_value">Не указан</option>
+                <option *ngFor="let type_item of type.value" value="{{type_item.code}}">{{type_item.name}}</option>
+            </select>
+            <span *ngIf="validator().type_error_required_if_not_on_hold" class="help-block animated fadeInDown">Тип проекта должен быть указан</span>
+            <span *ngIf="validator().type_show_remove || validator().type_show_ok" [ngClass]="{
+                    'glyphicon-remove':validator().type_show_remove,
+                    'glyphicon-ok':validator().type_show_ok
+                    }" class="glyphicon form-control-feedback animated fadeIn" aria-hidden="true"></span>
+        </div>
+
+        <div class="top-margin form-group animated fadeIn has-feedback">
+            <label>Жанры </label>
+            <select multiple formControlName="genres" class="form-control">
+                <option *ngFor="let genres_item of genres.value" value="{{genres_item.code}}">{{genres_item.name}}</option>
+            </select>
+            <button class="form-control" (click)="control_genres.setValue([]); control_genres.markAsDirty(); false" [disabled]="!control_genres.value.length">Убрать все</button>
+        </div>
+
+        <div class="top-margin form-group animated fadeIn has-feedback">
+            <label>Дополнительные жанры (через запятую) </label>
+            <input type="text" class="form-control" formControlName="genres_custom" />
+        </div>
+
+        <div class="top-margin form-group animated fadeIn has-feedback" [ngClass]="{
+            'has-error': validator().start_date_has_error,
+            'has-success': validator().start_date_has_success
+            }">
+            <label>Дата старта <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" name="start_date_visible_{{projectId}}" value="{{start_date_visible}}">
+            <input type="hidden" class="form-control" formControlName="start_date">
+            <span *ngIf="validator().start_date_error_required_if_not_on_hold" class="help-block animated fadeInDown">Дата старта должна быть указана</span>
+            <span *ngIf="validator().start_date_show_remove || validator().start_date_show_ok" [ngClass]="{
+                    'glyphicon-remove':validator().start_date_show_remove,
+                    'glyphicon-ok':validator().start_date_show_ok
+                    }" class="glyphicon form-control-feedback animated fadeIn" aria-hidden="true"></span>
+        </div>
+
+        <div class="top-margin form-group animated fadeIn has-feedback">
+            <label>Дата окончания <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" name="deadline_date_visible_{{projectId}}" value="{{deadline_date_visible}}">
+            <input type="hidden" class="form-control" formControlName="deadline_date">
+        </div>
+
+        <div class="top-margin form-group animated fadeIn has-feedback" [ngClass]="{
+            'has-error': validator().duration_has_error,
+            'has-success': validator().duration_has_success
+            }">
+            <label>Длительность </label>
+            <div class="form-inline">
+                <input type="number" class="form-control" formControlName="duration" />
+                <select formControlName="duration_units" class="form-control">
+                    <option *ngFor="let duration_units_item of duration_units.value" value="{{duration_units_item.code}}">{{duration_units_item.name}}</option>
+                </select>
+            </div>
+            <span *ngIf="validator().duration_error_required_if_not_on_hold" class="help-block animated fadeInDown">Длительность должна быть указана</span>
+            <span *ngIf="validator().duration_show_remove || validator().duration_show_ok" [ngClass]="{
+                    'glyphicon-remove':validator().duration_show_remove,
+                    'glyphicon-ok':validator().duration_show_ok
+                    }" class="glyphicon form-control-feedback animated fadeIn" aria-hidden="true"></span>
+        </div>
+
+        <div class="top-margin form-group animated fadeIn has-feedback">
+            <label>Страна </label>
+            <select formControlName="country" class="form-control">
+                <option value="null_value">Не указана</option>
+                <option *ngFor="let country of countries.value" value="{{country.code}}">{{country.name}}</option>
+            </select>
+        </div>
+
+        <div class="top-margin form-group animated fadeIn has-feedback" [ngClass]="{
+            'has-error': validator().city_has_error,
+            'has-success': validator().city_has_success
+            }">
+            <label>Город </label>
+            <select formControlName="city" class="form-control">
+                <option value="null_value">Не указан</option>
+                <option *ngFor="let city of cities.value" value="{{city.code}}">{{city.name}}</option>
+            </select>
+            <span *ngIf="validator().city_error_required_if_not_on_hold" class="help-block animated fadeInDown">Город должен быть указан</span>
+            <span *ngIf="validator().city_show_remove || validator().city_show_ok" [ngClass]="{
+                    'glyphicon-remove':validator().city_show_remove,
+                    'glyphicon-ok':validator().city_show_ok
+                    }" class="glyphicon form-control-feedback animated fadeIn" aria-hidden="true"></span>
+        </div>
+
+        <div class="top-margin form-group animated fadeIn has-feedback" [ngClass]="{
+            'has-error': validator().place_has_error,
+            'has-success': validator().place_has_success
+            }">
+            <label>Место </label>
+            <input type="text" class="form-control" formControlName="place" />
+            <span *ngIf="validator().place_error_required_if_not_on_hold" class="help-block animated fadeInDown">Место проведения должно быть указано</span>
+            <span *ngIf="validator().place_show_remove || validator().place_show_ok" [ngClass]="{
+                    'glyphicon-remove':validator().place_show_remove,
+                    'glyphicon-ok':validator().place_show_ok
+                    }" class="glyphicon form-control-feedback animated fadeIn" aria-hidden="true"></span>
+        </div>
+
+        <div class="top-margin form-group animated fadeIn">
+            <button id="projectedit_{{project.id}}_submitButton" autocomplete="off" data-loading-text="<i class='fa fa-spinner fa-spin fa-fw'></i>" class="btn btn-action" type="submit" [disabled]="!form.valid || validator().loading">Сохранить</button>
+        </div>
+
+    </form>
+
+    </ng-container>

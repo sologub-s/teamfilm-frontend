@@ -1,19 +1,12 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { ActivatedRoute }   from '@angular/router';
+import {Component, OnInit, ViewChild, AfterViewInit, ViewChildren, QueryList} from '@angular/core';
+import {BehaviorSubject} from "rxjs";
 
-import { SigninformComponent } from './signinform.component';
-import { SignupformComponent } from './signupform.component';
-import { ActivationformComponent } from './activationform.component';
-import { ResetpasswordrequestformComponent } from "./resetpasswordrequestform.component";
-import { ResetpasswordverificationformComponent } from "./resetpasswordverificationform.component";
-import { ProjectnewComponent } from "./projectnew.component";
-
-import { ConfigService } from './config.service';
 import { UserService } from './user.service';
 import { ProjectService } from './project.service';
-import {BehaviorSubject} from "rxjs";
+
 import {PaginationComponent} from "./pagination.component";
+import { ProjectnewComponent } from "./projectnew.component";
+import {ProjecteditComponent} from "./projectedit.component";
 
 @Component({
     selector: 'my-dashboard-projects',
@@ -32,6 +25,9 @@ export class DashboardprojectsComponent implements OnInit, AfterViewInit {
 
     @ViewChild(PaginationComponent)
     private paginationComponent: PaginationComponent;
+
+    @ViewChildren('editor')
+    private editors : QueryList<ProjecteditComponent>;
 
     constructor(
         private userService : UserService,
@@ -70,6 +66,17 @@ export class DashboardprojectsComponent implements OnInit, AfterViewInit {
                     });
                 }, 0);
             }
+        });
+
+        this.editors.changes.subscribe(value => {
+            value.toArray().forEach(v => {
+                v.onSubmitEmitter.subscribe(message => {
+                    if(message.status == 200) {
+                        console.log('zxc');
+                        this.loadProjectsList(this.criteria.value.page);
+                    }
+                });
+            });
         });
     }
 

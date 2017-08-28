@@ -25,9 +25,16 @@
                             <td>{{project.title}}</td>
                             <td>{{project.description.length > 25 ? (project.description | shorten) : project.description}}</td>
                             <td>{{project.status}}</td>
-                            <td><button type="button" class="btn btn-default" (click)="openEditors.push(project.id); false" [disabled]="openEditors.indexOf(project.id) > -1">Изменить</button></td>
+                            <td>
+                                <button *ngIf="openEditors.indexOf(project.id) === -1" type="button" class="btn btn-default" (click)="openEditors.push(project.id); false">Изменить</button>
+                                <button *ngIf="openEditors.indexOf(project.id) > -1" type="button" class="btn btn-default" (click)="openEditors.splice(openEditors.indexOf(project.id), 1); false" >Отмена</button>
+                            </td>
                         </tr>
-                        <tr *ngIf="openEditors.indexOf(project.id) > -1"><td colspan="4">edit form</td></tr>
+                        <tr *ngIf="openEditors.indexOf(project.id) > -1">
+                            <td colspan="4">
+                                <my-projectedit #editor [projectId]="project.id"></my-projectedit>
+                            </td>
+                        </tr>
                     </ng-container>
                 </tbody>
             </table>

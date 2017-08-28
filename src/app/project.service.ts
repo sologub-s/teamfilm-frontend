@@ -30,6 +30,16 @@ export class ProjectService {
         return 'assets/images/defaultProjectLogo.png';
     }
 
+    public get (id : String) {
+        return this.apiService
+            .get(this.projectUrl + '/' + id)
+            .then(res => {
+                return Promise.resolve(res);
+            }, rej => {
+                return Promise.reject(rej);
+            });
+    }
+
     public create (user_id : String, title : String, description : String) {
         return this.apiService
             .post(this.projectUrl, JSON.stringify(
